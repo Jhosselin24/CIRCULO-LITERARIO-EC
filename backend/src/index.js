@@ -1,0 +1,20 @@
+import app from './server.js'
+import connection from './database.js'
+import crearAdmin from './scripts/crearAdmin.js'
+
+//Conecta a la base de datos y se crea un administrador en la BDD 
+const iniciarServidor = async() => {
+  try {
+    await connection()
+    await crearAdmin()
+
+    app.listen(app.get('port'),()=>{
+      console.log(`Server ok on http://localhost:${app.get('port')}`);
+    })
+  } catch (error) {
+    console.error("No se pudo iniciar el servidor:", error.message)
+    process.exit(1)
+  }
+}
+
+iniciarServidor()
