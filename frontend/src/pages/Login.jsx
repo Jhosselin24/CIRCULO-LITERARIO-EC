@@ -1,130 +1,104 @@
-import { useState } from 'react'
-import { MdVisibility, MdVisibilityOff, MdAutoStories, MdEmail, MdLockOpen, MdArrowBack } from "react-icons/md"
-import { Link, useNavigate } from 'react-router'
-import { useFetch } from '../hooks/useFetch'
-import { ToastContainer } from 'react-toastify'
-import { useForm } from 'react-hook-form'
-import { API_BASE_URL, saveSession } from '../utils/auth'
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-const Login = () => {
-    const [showPassword, setShowPassword] = useState(false)
-    const navigate = useNavigate()
-    const { register, handleSubmit, formState: { errors } } = useForm()
-    const fetchDataBackend = useFetch()
+export default function Login() {
+  const navigate = useNavigate();
 
-    const loginUser = async (dataForm) => {
-        const url = `${API_BASE_URL}/auth/login`
-        const response = await fetchDataBackend(url, dataForm, 'POST')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-        if (response?.usuario) {
-            saveSession(response.usuario)
-            navigate('/dashboard')
-        }
+  const handleLogin = () => {
+    if (email === "admin@epn.edu.ec" && password === "1234") {
+      localStorage.setItem("auth", "true");
+      navigate("/home");
+    } else {
+      alert("Credenciales incorrectas");
     }
+  };
 
-    const inputStyle = "block w-full pl-10 rounded-lg border border-gray-200 bg-white py-3 text-sm text-gray-700 focus:border-[#e67e22] focus:ring-1 focus:ring-[#e67e22] focus:outline-none transition-all duration-200 shadow-sm"
-    const labelStyle = "mb-1.5 block text-xs font-bold uppercase text-[#2c3e50] tracking-widest"
-    const errorStyle = "text-xs text-red-500 mt-1 font-semibold italic"
+  return (
+    <div className="flex h-screen">
 
-    return (
-        <div className="flex h-screen bg-white font-sans overflow-hidden text-[#2c3e50]">
-            <ToastContainer />
-
-            <div className="hidden lg:block lg:w-1/2 relative">
-                <div className="absolute inset-0 bg-[#2c3e50]/70 mix-blend-multiply z-10"></div>
-                <img
-                    src="/images/librosfondo.jpeg"
-                    alt="Biblioteca"
-                    className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 flex flex-col justify-center p-16 z-20 text-white">
-                    <span className="bg-[#e67e22] w-20 h-1 mb-6"></span>
-                    <h2 className="text-5xl font-black leading-tight uppercase tracking-tighter">
-                        Tu Proximo <br /> Capitulo <br /> Comienza Aqui
-                    </h2>
-                </div>
-            </div>
-
-            <div className="w-full lg:w-1/2 flex flex-col relative bg-white overflow-y-auto">
-
-                <div className="absolute top-6 left-8 z-30">
-                    <Link to="/" className="flex items-center text-sm font-bold text-gray-400 hover:text-[#2c3e50] transition-all group">
-                        <MdArrowBack className="mr-2 group-hover:-translate-x-1 transition-transform" size={20}/>
-                        Regresar
-                    </Link>
-                </div>
-
-                <div className="flex-1 flex flex-col justify-center items-center px-8 sm:px-16 py-12">
-                    <div className="w-full max-w-md">
-                        <header className="text-center mb-8 mt-4">
-                            <div className="flex justify-center mb-3 text-[#e67e22]">
-                                <MdAutoStories size={45} />
-                            </div>
-                            <h1 className="text-3xl font-black uppercase tracking-tighter">
-                                Bienvenido<span className="text-[#e67e22]">(a)</span>
-                            </h1>
-                            <p className="text-gray-400 mt-1 font-medium italic text-sm">
-                                Accede a la comunidad de Circulo Literario EC
-                            </p>
-                        </header>
-
-                        <form onSubmit={handleSubmit(loginUser)} className="space-y-5">
-                            <div>
-                                <label className={labelStyle}>Correo o Usuario</label>
-                                <div className="relative">
-                                    <MdEmail className="absolute left-3 top-3.5 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="ejemplo@correo.com"
-                                        className={inputStyle}
-                                        {...register("identifier", { required: "El usuario es obligatorio" })}
-                                    />
-                                </div>
-                                {errors.identifier && <p className={errorStyle}>{errors.identifier.message}</p>}
-                            </div>
-
-                            <div>
-                                <label className={labelStyle}>Contrasena</label>
-                                <div className="relative">
-                                    <MdLockOpen className="absolute left-3 top-3.5 text-gray-400" />
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder="************"
-                                        className={inputStyle}
-                                        {...register("password", { required: "La contrasena es obligatoria" })}
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#e67e22]"
-                                    >
-                                        {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
-                                    </button>
-                                </div>
-                                {errors.password && <p className={errorStyle}>{errors.password.message}</p>}
-                                <div className="flex justify-end mt-2">
-                                    <Link to="/forgot" className="text-xs font-bold text-gray-400 hover:text-[#e67e22] transition-colors">
-                                        Olvidaste tu contrasena?
-                                    </Link>
-                                </div>
-                            </div>
-
-                            <button className="w-full bg-[#e67e22] text-white font-black py-4 rounded-xl shadow-lg shadow-orange-100 hover:bg-[#d35400] hover:-translate-y-1 transition-all duration-300 uppercase tracking-widest text-sm">
-                                Iniciar sesion
-                            </button>
-                        </form>
-
-                        <div className="mt-10 p-5 bg-orange-50 rounded-2xl border border-orange-100 text-center">
-                            <p className="text-sm text-gray-600 font-medium mb-2">Aun no eres parte del club?</p>
-                            <Link to="/register" className="text-[#e67e22] font-black uppercase tracking-widest text-sm hover:text-[#d35400] transition-colors inline-block border-b-2 border-[#e67e22]">
-                                Registrate gratis aqui
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      {/* IZQUIERDA */}
+      <div className="hidden md:flex w-1/2 bg-[url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f')] bg-cover bg-center">
+        <div className="bg-black/70 flex flex-col justify-center p-10 w-full">
+          <div className="w-10 h-1 bg-orange-500 mb-4"></div>
+          <h1 className="text-white text-4xl font-bold leading-tight">
+            TU PRÓXIMO <br /> CAPÍTULO <br /> COMIENZA AQUÍ
+          </h1>
+          <p className="text-gray-300 mt-4">
+            Únete a nuestra comunidad y descubre historias increíbles.
+          </p>
         </div>
-    )
-}
+      </div>
 
-export default Login
+      {/* DERECHA */}
+      <div className="flex w-full md:w-1/2 items-center justify-center bg-gray-100">
+        <div className="w-[350px] bg-white p-6 rounded-2xl shadow-lg">
+
+          <p className="text-sm text-gray-500 cursor-pointer mb-2">← Regresar</p>
+
+          <div className="text-center mb-4">
+            <div className="text-orange-500 text-3xl">📖</div>
+            <h2 className="text-2xl font-bold">
+              BIENVENIDO<span className="text-orange-500">(A)</span>
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Accede a la comunidad de Círculo Literario EC
+            </p>
+          </div>
+
+          {/* INPUT EMAIL */}
+          <input
+            type="text"
+            placeholder="ejemplo@correo.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 mb-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+
+          {/* INPUT PASSWORD */}
+          <input
+            type="password"
+            placeholder="********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-3 mb-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+
+          <p className="text-xs text-right text-gray-400 mb-3 cursor-pointer">
+            ¿Olvidaste tu contraseña?
+          </p>
+
+          {/* BOTÓN */}
+          <button
+            onClick={handleLogin}
+            className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-bold hover:scale-105 transition"
+          >
+            INICIAR SESIÓN
+          </button>
+
+          <div className="text-center text-gray-400 text-sm my-3">
+            o inicia sesión con
+          </div>
+
+          <button className="w-full border py-2 rounded-lg hover:bg-gray-50">
+            Google
+          </button>
+
+          <p className="text-sm text-center mt-4">
+            ¿No tienes una cuenta?{" "}
+            <span
+              onClick={() => navigate("/register")}
+              className="text-orange-500 font-bold cursor-pointer"
+            >
+              Regístrate aquí
+            </span>
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+  );
+}
