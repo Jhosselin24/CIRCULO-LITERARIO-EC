@@ -4,7 +4,7 @@ import { CardProfile } from '../components/profile/CardProfile'
 import FormProfile from '../components/profile/FormProfile'
 import { useFetch } from '../hooks/useFetch'
 import { API_BASE_URL, getAuthHeaders, getStoredSession } from '../utils/auth'
-
+import Navbar from "../components/Navbar"; 
 const Profile = () => {
     const fetchDataBackend = useFetch()
     const [profile, setProfile] = useState(() => getStoredSession())

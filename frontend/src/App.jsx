@@ -1,55 +1,37 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 
-import { BrowserRouter, Route, Routes } from 'react-router'
-import { Home } from './pages/Home'
-import Login from './pages/Login'
-import { Register } from './pages/Register'
-import { Forgot } from './pages/Forgot'
-import { Confirm } from './pages/Confirm'
-import { NotFound } from './pages/NotFound'
-import Dashboard from './layout/Dashboard'
-import Profile from './pages/Profile'
-import List from './pages/List'
-import Details from './pages/Details'
-import Create from './pages/Create'
-import Update from './pages/Update'
-import Chat from './pages/Chat'
-import Reset from './pages/Reset'
+import Login from "./pages/Login"
+import Home from "./pages/Home"
+import Register from "./pages/Register"
+import Comunidad from "./pages/Comunidad"
+import Beneficios from "./pages/Beneficios"
+import Contacto from "./pages/Contacto"
 
-
+import Navbar from "./components/Navbar"
 
 function App() {
-
-
-
-  
   return (
-    <>
     <BrowserRouter>
-      <Routes>
-        
-        <Route index element={<Home/>}/>
-        <Route path='login' element={<Login/>}/>
-        <Route path='register' element={<Register/>}/>
-        <Route path='forgot' element={<Forgot/>}/>
-        <Route path='confirm/:token' element={<Confirm/>}/>
-        <Route path='reset/:token' element={<Reset/>}/>
-        <Route path='*' element={<NotFound />} />
+      <div className="min-h-screen bg-[#FEF2E1]">
 
+        <Navbar />
 
-        <Route path='/dashboard' element={<Dashboard/>}>
-          <Route index element={<Profile/>}/>
-          <Route path='listar' element={<List/>}/>
-          <Route path='visualizar/:id' element={<Details/>}/>
-          <Route path='crear' element={<Create/>}/>
-          <Route path='actualizar/:id' element={<Update/>}/>
-          <Route path='chat' element={<Chat/>}/>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
-        </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
+          <Route path="/home" element={<Home />} />
+          <Route path="/comunidad" element={<Comunidad />} />
+          <Route path="/beneficios" element={<Beneficios />} />
+          <Route path="/contacto" element={<Contacto />} />
 
-      </Routes>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+
+      </div>
     </BrowserRouter>
-    </>
   )
 }
 
